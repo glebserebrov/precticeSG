@@ -1,0 +1,54 @@
+from tkinter import *
+from tkinter import messagebox
+from scipy import integrate
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+h = 300
+er = 1
+e0 = 8.85 * 10**(-12)
+
+def show_graph():
+    t = np.arange(0, 1000)
+    plt.plot(t, (float(imax.get())/0.97)*(np.exp(-t/(70.4*math.e-6))-np.exp(t/(0.24*math.e-6))))
+    plt.show()
+    
+
+def func(time):
+
+    return (float(imax.get())/0.97)*(np.exp(-time/(70.4*np.exp(1)-6))-np.exp(time/(0.24*np.exp(1)-6)))
+
+def show_int_result():
+    q = integrate.quad(func, 0, 1000)[0]
+    s = q*h/(er*e0*float(u.get()))
+    messagebox.showinfo("Результат вычисления", s)
+
+root = Tk()
+root.title("GUI на Python")
+
+root.geometry("300x400")
+
+
+imax = StringVar()
+u = StringVar()
+
+imax_entry = Entry(textvariable=imax)
+imax_entry.grid(row = 1, column = 1, columnspan = 1)
+
+u_entry = Entry(textvariable=u)
+u_entry.grid(row = 2, column = 1, columnspan = 1)
+
+
+Label(text="Амплитуда молнии:").grid(row=1, column=0)
+Label(text="Потенциал облака:").grid(row=2, column=0)
+
+
+
+int_button = Button(text="Вычислить площадь грозового облака", command=show_int_result)
+int_button.place(relx=.5, rely=.5, anchor="c")
+
+graph_button = Button(text="Построить график", command=show_graph)
+graph_button.place(relx=.5, rely=.6, anchor="c")
+
+root.mainloop()
